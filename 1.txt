@@ -1,0 +1,161 @@
+	Создайте иерархию классов для инвентаризации.
+
+	В иерархию будут входить два типа: Аудитория и Организация.
+
+	Организация имеет поля: рабочий телефон, адрес, массив Аудиторий
+
+	Аудитория имеет поля: количество мониторов, количество столов, стульев, вешалок, проекторов и т.д.
+
+	Аудитория должна иметь метод для формирования отчета о себе (печать всего перечня);
+
+	Организация должна иметь метод для формирования полного отчета
+        (печать рабочего телефона, адреса, печать всех отчетов всех аудиторий)
+
+
+#include <iostream>
+#include <string.h>
+#include <windows.h>
+#include <time.h>
+using namespace std;
+
+
+
+class auditoria
+{
+	int monitor, table, chair, hanger, projector;
+
+
+public:
+	auditoria(int p_monitor, int p_table, int p_chair, int p_hanger, int p_projector)  // конструктор инициализации объекта
+	{
+		monitor = p_monitor;
+		table = p_table;
+		chair = p_chair;
+		hanger = p_hanger;
+		projector = p_projector;
+	}
+
+	auditoria()                 // конструктор по умолчанию
+	{
+		monitor = table = chair = hanger = projector = 0;
+	}
+
+	void print(int i) const                                          // метод печати экземпляра класса
+	{
+		cout << "\n\tПараметры аудитории: " << i + 1;
+		cout << "\n\n\tКоличество мониторов:   " << monitor << "\n\tКоличество столов:      " << table << "\n\tКоличество стульев:     " << chair;
+		cout << "\n\tКоличество вешалок:     " << hanger << "\n\tКоличество проекторов:  " << projector << endl << endl << endl;
+	}
+};
+
+
+
+class organization
+{
+	string telephone_number;
+	string address;
+	auditoria *array;
+	int size;
+
+public:
+	organization (string p_telephone_number, string p_address, auditoria *p_array, int p_size)    // конструктор инициализации объекта
+	{
+		telephone_number = p_telephone_number;
+		address = p_address;
+		array = p_array;
+		size = p_size;
+	}
+	
+	void print_o() const                       // метод печати экземпляра класса (со всеми аудиториями)
+	{
+		cout << "\n\n\tНомер телефона:   " << telephone_number << "\n\tАдрес:            " << address;
+		cout << endl << endl;
+		for (int i = 0; i < size; i++)
+		{
+			array[i].print(i);
+		}
+		system("pause");
+	}
+};
+
+
+
+void fill(auditoria array[], int size)         // инициализация всех аудиторий
+{
+	for (int i = 0; i < size; i++)   
+	{
+		array[i] = auditoria(rand() % 9 + 1, rand() % 9 + 1, rand() % 9 + 1, rand() % 9 + 1, rand() % 9 + 1);
+	}
+}
+
+
+
+int main()
+{
+	setlocale(0, "");
+	srand(time(NULL));
+
+	const int size = 5;
+	auditoria array[size];
+	organization o { "2222222", "Krasnodar", array, size };
+	fill(array, size);
+	
+	
+	int change;   // управляющая переменная для switch
+	bool marker = true;  // для выхода из switch
+
+	while (true)
+	{
+		system("CLS");
+		cout << "\n\tКакое действие вы хотите совершить?\n";
+		cout << "\n\tВывести на экран параметры одной из аудиторий? - введите 1";
+		cout << "\n\tВывести на экран параметры всей организации? - введите 2";
+		cout << "\n\tвыход - введите 3\n";
+		cin >> change;
+
+		while (change < 1 || change > 3)
+		{
+			cout << "\n\n\tНеобходимо ввести значение от 1 до 3!!!\n";
+			cout << "\n\tКакое действие вы хотите совершить?\n";
+			cout << "\n\tВывести на экран параметры одной из аудиторий? - введите 1";
+			cout << "\n\tВывести на экран параметры всей организации? - введите 2";
+			cout << "\n\tвыход - введите 3\n";
+			cin >> change;
+		}
+
+		switch (change)
+		{
+			case 1:
+				system("CLS");
+				int a;
+				cout << "\n\tПараметры какой аудитории Вы хотите вывести?\n";
+				cin >> a;
+				while (a < 1 || a > size)
+				{
+					cout << "\n\n\tНеобходимо ввести значение от 1 до " << size << "!!!\n";
+					cout << "\n\tПараметры какой аудитории Вы хотите вывести?\n";
+					cin >> a;
+				}
+				array[a-1].print(a-1);
+				system("pause");
+				break;
+
+
+			case 2:
+				o.print_o();
+				break;
+
+
+			case 3:
+				marker = false;
+				break;
+		}
+
+		if (marker == false)
+			break;
+	}
+
+	
+	cout << "\n\n\n";
+	return 0;
+}
